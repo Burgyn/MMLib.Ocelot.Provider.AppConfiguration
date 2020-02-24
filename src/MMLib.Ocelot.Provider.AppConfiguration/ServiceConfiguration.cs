@@ -11,7 +11,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
 
         public Service ToService()
         {
-            Uri uri = new Uri(DownstreamPath);
+            var uri = new Uri(DownstreamPath);
 
             return new Service(
                 Name,
