@@ -9,16 +9,19 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
 
         public string DownstreamPath { get; set; }
 
-        public Service ToService()
-        {
-            var uri = new Uri(DownstreamPath);
-
-            return new Service(
+        public Service ToService() =>
+            new Service(
                 Name,
-                new ServiceHostAndPort(uri.Host, uri.Port, uri.Scheme),
+                GetServiceHostAndPort(),
                 string.Empty,
                 string.Empty,
                 new string[0]);
+
+        private ServiceHostAndPort GetServiceHostAndPort()
+        {
+            var uri = new Uri(DownstreamPath);
+
+            return new ServiceHostAndPort(uri.Host, uri.Port, uri.Scheme);
         }
     }
 }

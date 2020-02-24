@@ -19,4 +19,10 @@
     <ProjectReference Include="..\..\src\MMLib.Ocelot.Provider.AppConfiguration\MMLib.Ocelot.Provider.AppConfiguration.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
