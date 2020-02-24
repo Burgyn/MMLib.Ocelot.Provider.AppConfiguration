@@ -7,6 +7,7 @@ using System.Linq;
 using Ocelot.Values;
 using System;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 {
@@ -20,14 +21,13 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         [InlineData("Authorization", "https://authorizationService.domain.com/")]
         public async Task LoadServiceByNameAsync(string serviceName, string downstreamPath)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true)
-                .Build();
+            IConfiguration configuration = GetConfiguration();
 
             var appConfiguration = new AppConfiguration(
                 configuration,
                 new DownstreamReRouteBuilder().WithServiceName(serviceName).Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 1));
+                new ServiceProviderConfiguration("", "", 1, "", "", 1),
+                new MemoryCache(new MemoryCacheOptions()));
 
             Service service = (await appConfiguration.Get()).First();
 
@@ -38,5 +38,46 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             uri.Should().Be(downstreamPath);
         }
+
+        [Fact]
+        public async Task CachedService()
+        {
+            IConfiguration configuration = GetConfiguration();
+
+            var appConfiguration = new AppConfiguration(
+                configuration,
+                new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
+                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new MemoryCache(new MemoryCacheOptions()));
+
+            Service service = (await appConfiguration.Get()).First();
+            Service service2 = (await appConfiguration.Get()).First();
+
+            service.Should().Be(service2);
+        }
+
+        [Fact]
+        public async Task GetNewInstanceIfCacheExpired()
+        {
+            IConfiguration configuration = GetConfiguration();
+            var cache = new MemoryCache(new MemoryCacheOptions());
+
+            var appConfiguration = new AppConfiguration(
+                configuration,
+                new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
+                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                cache);
+
+            Service service = (await appConfiguration.Get()).First();
+            cache.Remove("Service_users");
+            Service service2 = (await appConfiguration.Get()).First();
+
+            service.Should().NotBe(service2);
+        }
+
+        private static IConfiguration GetConfiguration() =>
+            new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .Build();
     }
 }

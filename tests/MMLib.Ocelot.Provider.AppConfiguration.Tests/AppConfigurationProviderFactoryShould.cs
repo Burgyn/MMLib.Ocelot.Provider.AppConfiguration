@@ -15,13 +15,14 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         {
             var services = new ServiceCollection();
             services.AddSingleton(new ConfigurationBuilder().Build());
+            services.AddMemoryCache();
 
             var factory = AppConfigurationProviderFactory.Get;
 
             IServiceDiscoveryProvider provider = factory(
                 services.BuildServiceProvider(),
                 new ServiceProviderConfiguration("", "", 1, "", "", 1),
-                new DownstreamReRouteBuilder().Build());
+                new DownstreamReRouteBuilder().WithServiceName("Users").Build());
 
             provider.Should().NotBeNull();
         }
