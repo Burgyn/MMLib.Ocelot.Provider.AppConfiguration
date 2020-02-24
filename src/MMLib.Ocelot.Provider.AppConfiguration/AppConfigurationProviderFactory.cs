@@ -2,6 +2,7 @@
 using Ocelot.ServiceDiscovery;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
+using Ocelot.Logging;
 
 namespace MMLib.Ocelot.Provider.AppConfiguration
 {
@@ -17,8 +18,9 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
         {
             IConfiguration configuration = provider.GetService<IConfiguration>();
             IMemoryCache cache = provider.GetService<IMemoryCache>();
+            IOcelotLoggerFactory loggerFactory = provider.GetService<IOcelotLoggerFactory>();
 
-            return new AppConfiguration(configuration, reRoute, config, cache);
+            return new AppConfiguration(configuration, reRoute, config, cache, loggerFactory);
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Ocelot.Configuration;
+using Ocelot.Logging;
 using Ocelot.ServiceDiscovery.Providers;
 using Ocelot.Values;
 using System;
@@ -16,10 +17,12 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
     /// <seealso cref="Ocelot.ServiceDiscovery.Providers.IServiceDiscoveryProvider" />
     public class AppConfiguration : IServiceDiscoveryProvider
     {
+        private const int DEFAULT_CACHE_EXPIRATION_IN_MINUTES = 10;
         private readonly IConfiguration _configuration;
         private readonly string _serviceName;
         private readonly ServiceProviderConfiguration _providerConfiguration;
         private readonly IMemoryCache _cache;
+        private readonly IOcelotLogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppConfiguration"/> class.
@@ -28,38 +31,54 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
         /// <param name="downstreamReRoute">The downstream re route.</param>
         /// <param name="providerConfiguration">The provider configuration.</param>
         /// <param name="cache">The cache.</param>
+        /// <param name="factory">The factory.</param>
         public AppConfiguration(
             IConfiguration configuration,
             DownstreamReRoute downstreamReRoute,
             ServiceProviderConfiguration providerConfiguration,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            IOcelotLoggerFactory factory)
         {
             _configuration = configuration;
             _serviceName = downstreamReRoute.ServiceName.ToLower();
             _providerConfiguration = providerConfiguration;
             _cache = cache;
+            _logger = factory.CreateLogger<AppConfiguration>();
         }
 
         /// <summary>
         /// Gets services.
         /// </summary>
         public Task<List<Service>> Get()
-            => Task.FromResult(new List<Service>() { GetService() });
+            => Task.FromResult(GetServices());
 
-        private Service GetService()
+        private List<Service> GetServices()
         {
             if (!_cache.TryGetValue(GetKey(), out Service service))
             {
                 service = GetServiceInner();
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMilliseconds(_providerConfiguration.PollingInterval));
-
-                _cache.Set(GetKey(), service, cacheEntryOptions);
+                if (service != null)
+                {
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(GetExpiration());
+                    _cache.Set(GetKey(), service, cacheEntryOptions);
+                }
+                else
+                {
+                    _logger.LogWarning(
+                        $"Unable to use service '{_serviceName}' as it is invalid. Service is missing in configuration");
+                    return new List<Service>();
+                }
             }
 
-            return service;
+            return new List<Service>() { service };
         }
+
+        private TimeSpan GetExpiration()
+            => _providerConfiguration.PollingInterval > 0
+            ? TimeSpan.FromMilliseconds(_providerConfiguration.PollingInterval)
+            : TimeSpan.FromMinutes(DEFAULT_CACHE_EXPIRATION_IN_MINUTES);
 
         private Service GetServiceInner() =>
             _configuration

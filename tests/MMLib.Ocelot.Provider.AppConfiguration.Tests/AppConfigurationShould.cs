@@ -8,6 +8,9 @@ using Ocelot.Values;
 using System;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
+using NSubstitute;
+using Ocelot.Logging;
 
 namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 {
@@ -27,7 +30,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 configuration,
                 new DownstreamReRouteBuilder().WithServiceName(serviceName).Build(),
                 new ServiceProviderConfiguration("", "", 1, "", "", 1),
-                new MemoryCache(new MemoryCacheOptions()));
+                new MemoryCache(new MemoryCacheOptions()),
+                Substitute.For<IOcelotLoggerFactory>());
 
             Service service = (await appConfiguration.Get()).First();
 
@@ -48,12 +52,30 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 configuration,
                 new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
                 new ServiceProviderConfiguration("", "", 1, "", "", 300000),
-                new MemoryCache(new MemoryCacheOptions()));
+                new MemoryCache(new MemoryCacheOptions()),
+                Substitute.For<IOcelotLoggerFactory>());
 
             Service service = (await appConfiguration.Get()).First();
             Service service2 = (await appConfiguration.Get()).First();
 
             service.Should().Be(service2);
+        }
+
+        [Fact]
+        public async Task ReturnEmptyListIfServiceDoesntExist()
+        {
+            IConfiguration configuration = GetConfiguration();
+
+            var appConfiguration = new AppConfiguration(
+                configuration,
+                new DownstreamReRouteBuilder().WithServiceName("Service1").Build(),
+                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new MemoryCache(new MemoryCacheOptions()),
+                Substitute.For<IOcelotLoggerFactory>());
+
+            List<Service> services = await appConfiguration.Get();
+
+            services.Should().BeEmpty();
         }
 
         [Fact]
@@ -66,7 +88,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 configuration,
                 new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
                 new ServiceProviderConfiguration("", "", 1, "", "", 300000),
-                cache);
+                cache,
+                Substitute.For<IOcelotLoggerFactory>());
 
             Service service = (await appConfiguration.Get()).First();
             cache.Remove("Service_users");
