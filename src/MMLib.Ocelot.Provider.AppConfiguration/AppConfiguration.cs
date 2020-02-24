@@ -2,7 +2,6 @@
 using Ocelot.Configuration;
 using Ocelot.ServiceDiscovery.Providers;
 using Ocelot.Values;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +12,16 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
     {
         private readonly IConfiguration _configuration;
         private readonly DownstreamReRoute _downstreamReRoute;
+        private readonly ServiceProviderConfiguration _providerConfiguration;
 
-        public AppConfiguration(IConfiguration configuration, DownstreamReRoute downstreamReRoute)
+        public AppConfiguration(
+            IConfiguration configuration,
+            DownstreamReRoute downstreamReRoute,
+            ServiceProviderConfiguration providerConfiguration)
         {
             _configuration = configuration;
             _downstreamReRoute = downstreamReRoute;
+            _providerConfiguration = providerConfiguration;
         }
 
         public Task<List<Service>> Get() =>
@@ -27,28 +31,9 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
                     .Where(s => s.Key == _downstreamReRoute.ServiceName)
                     .Select(s =>
                     {
-                        ServiceConf service = s.Get<ServiceConf>();
+                        ServiceConfiguration service = s.Get<ServiceConfiguration>();
                         service.Name = s.Key;
                         return service.ToService();
                     }).ToList());
-    }
-
-    internal class ServiceConf
-    {
-        public string Name { get; set; }
-
-        public string DownstreamPath { get; set; }
-
-        public Service ToService()
-        {
-            Uri uri = new Uri(DownstreamPath);
-
-            return new Service(
-                Name,
-                new ServiceHostAndPort(uri.Host, uri.Port, uri.Scheme),
-                string.Empty,
-                string.Empty,
-                new string[0]);
-        }
     }
 }

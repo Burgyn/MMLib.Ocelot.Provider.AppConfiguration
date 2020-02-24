@@ -1,24 +1,22 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Ocelot.Configuration;
 using Ocelot.ServiceDiscovery;
-using Ocelot.ServiceDiscovery.Providers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace MMLib.Ocelot.Provider.AppConfiguration
 {
+    /// <summary>
+    /// Factory for creating <see cref="AppConfiguration"/> provider.
+    /// </summary>
     public static class AppConfigurationProviderFactory
     {
+        /// <summary>
+        /// Get <see cref="AppConfiguration"/> provider.
+        /// </summary>
         public static ServiceDiscoveryFinderDelegate Get = (provider, config, reRoute) =>
-        {
-            return GetProvider(provider, config, reRoute);
-        };
-
-        private static IServiceDiscoveryProvider GetProvider(IServiceProvider provider, ServiceProviderConfiguration config, DownstreamReRoute reRoute)
         {
             IConfiguration configuration = provider.GetService<IConfiguration>();
 
-            return new AppConfiguration(configuration, reRoute);
-        }
+            return new AppConfiguration(configuration, reRoute, config);
+        };
     }
 }
