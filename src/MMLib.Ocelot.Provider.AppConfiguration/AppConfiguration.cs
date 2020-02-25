@@ -14,7 +14,6 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
     /// <summary>
     /// Provider for getting services from app configuration.
     /// </summary>
-    /// <seealso cref="Ocelot.ServiceDiscovery.Providers.IServiceDiscoveryProvider" />
     public class AppConfiguration : IServiceDiscoveryProvider
     {
         private const int DefaultCacheExpirationInMinutes = 10;
