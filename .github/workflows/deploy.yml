@@ -1,9 +1,10 @@
 name: Publish package
 
 on:
-  push: 
-    branches: 
-      - refs/tags/release_v*
+  push:
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - master
 
 jobs:
   deploy:
