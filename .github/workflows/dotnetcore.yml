@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build Pull Request
 
 on: [push]
 
@@ -11,7 +11,7 @@ jobs:
       uses: actions/setup-dotnet@v1.2.0
       with:
         dotnet-version: 3.1.100
-    - name: Build with dotnet
+    - name: Build
       run: dotnet build ./MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
-    - name: Test with dotnet
+    - name: Test
       run: dotnet test ./MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
