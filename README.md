@@ -3,6 +3,7 @@
 ![logo](/src/MMLib.Ocelot.Provider.AppConfiguration/icon.png)
 
 ***AppConfiguration*** provider brings the possibility to divide the routing configuration from the service address definition.
+![Build Pull Request](https://github.com/Burgyn/MMLib.Ocelot.Provider.AppConfiguration/workflows/Build%20Pull%20Request/badge.svg?branch=master)
 
 # Get Started
 
