@@ -1,0 +1,7 @@
+{
+  "ServiceDiscoveryProvider": {
+    "Type": "AppConfiguration",
+    "PollingInterval": 10000,
+    "AppConfigurationSectionName": "ApiServices"
+  }
+}

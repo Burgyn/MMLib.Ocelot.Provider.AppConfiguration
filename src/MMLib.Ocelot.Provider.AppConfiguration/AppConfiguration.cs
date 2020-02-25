@@ -17,7 +17,10 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
     /// <seealso cref="Ocelot.ServiceDiscovery.Providers.IServiceDiscoveryProvider" />
     public class AppConfiguration : IServiceDiscoveryProvider
     {
-        private const int DEFAULT_CACHE_EXPIRATION_IN_MINUTES = 10;
+        private const int DefaultCacheExpirationInMinutes = 10;
+        private const string DefaultServiceSectionName = "Services";
+        private const string SectionNameConfigKey = "ServiceDiscoveryProvider:AppConfigurationSectionName";
+
         private readonly IConfiguration _configuration;
         private readonly string _serviceName;
         private readonly ServiceProviderConfiguration _providerConfiguration;
@@ -78,11 +81,11 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
         private TimeSpan GetExpiration()
             => _providerConfiguration.PollingInterval > 0
             ? TimeSpan.FromMilliseconds(_providerConfiguration.PollingInterval)
-            : TimeSpan.FromMinutes(DEFAULT_CACHE_EXPIRATION_IN_MINUTES);
+            : TimeSpan.FromMinutes(DefaultCacheExpirationInMinutes);
 
         private Service GetServiceInner() =>
             _configuration
-                .GetSection("Services")
+                .GetSection(GetSectionName())
                 .GetChildren()
                 .Where(s => s.Key.Equals(_serviceName, System.StringComparison.OrdinalIgnoreCase))
                 .Select(s =>
@@ -93,5 +96,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
                 }).FirstOrDefault();
 
         private string GetKey() => $"Service_{_serviceName}";
+
+        private string GetSectionName() =>
+            _configuration.GetValue<string>(SectionNameConfigKey) ?? DefaultServiceSectionName;
     }
 }

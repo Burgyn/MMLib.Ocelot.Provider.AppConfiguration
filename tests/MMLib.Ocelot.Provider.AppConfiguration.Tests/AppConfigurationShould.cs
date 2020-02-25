@@ -22,7 +22,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         [InlineData("projects", "http://localhost:9002/")]
         [InlineData("Projects", "http://localhost:9002/")]
         [InlineData("Authorization", "https://authorizationService.domain.com/")]
-        public async Task LoadServiceByNameAsync(string serviceName, string downstreamPath)
+        public async Task GetServiceByNameAsync(string serviceName, string downstreamPath)
         {
             IConfiguration configuration = GetConfiguration();
 
@@ -44,7 +44,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         }
 
         [Fact]
-        public async Task CachedService()
+        public async Task CachedServiceAsync()
         {
             IConfiguration configuration = GetConfiguration();
 
@@ -62,7 +62,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         }
 
         [Fact]
-        public async Task ReturnEmptyListIfServiceDoesntExist()
+        public async Task ReturnEmptyListIfServiceDoesntExistAsync()
         {
             IConfiguration configuration = GetConfiguration();
 
@@ -79,7 +79,27 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetNewInstanceIfCacheExpired()
+        public async Task GetServicesFromAnotherSectionAsync()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("ocelot.json")
+                .Build();
+
+            var appConfiguration = new AppConfiguration(
+                configuration,
+                new DownstreamReRouteBuilder().WithServiceName("ToDos").Build(),
+                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new MemoryCache(new MemoryCacheOptions()),
+                Substitute.For<IOcelotLoggerFactory>());
+
+            Service service = (await appConfiguration.Get()).First();
+
+            service.HostAndPort.DownstreamPort.Should().Be(9004);
+        }
+
+        [Fact]
+        public async Task GetNewInstanceIfCacheExpiredAsync()
         {
             IConfiguration configuration = GetConfiguration();
             var cache = new MemoryCache(new MemoryCacheOptions());
@@ -100,7 +120,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
         private static IConfiguration GetConfiguration() =>
             new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.json")
                 .Build();
     }
 }
