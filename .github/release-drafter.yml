@@ -1,5 +1,5 @@
 name-template: 'MMLib.SwaggerForOcelot v$NEXT_PATCH_VERSION ✈️'
-tag-template: 'swaggerforocelot_v$NEXT_PATCH_VERSION'
+tag-template: 'release_v*$NEXT_PATCH_VERSION'
 categories:
   - title: '🚀 Features'
     labels:
