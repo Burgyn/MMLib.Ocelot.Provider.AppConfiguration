@@ -1,6 +1,6 @@
-![logo](\src\MMLib.Ocelot.Provider.AppConfiguration\icon.png)
-
 # MMLib.Ocelot.Provider.AppConfiguration
+
+![logo](/src/MMLib.Ocelot.Provider.AppConfiguration/icon.png)
 
 ***AppConfiguration*** provider brings the possibility to divide the routing configuration from the service address definition.
 
