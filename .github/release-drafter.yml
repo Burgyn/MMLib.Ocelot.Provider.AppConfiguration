@@ -1,4 +1,4 @@
-name-template: 'MMLib.SwaggerForOcelot v$NEXT_PATCH_VERSION ✈️'
+name-template: 'MMLib.Ocelot.Provider.AppConfiguration v$NEXT_PATCH_VERSION ✈️'
 tag-template: 'release_v*$NEXT_PATCH_VERSION'
 categories:
   - title: '🚀 Features'
