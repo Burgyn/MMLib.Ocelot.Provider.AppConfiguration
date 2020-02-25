@@ -15,6 +15,6 @@ jobs:
       with:
         dotnet-version: 3.0.100    
     - name: Build with dotnet
-      run: dotnet build ./src/MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
+      run: dotnet build ./MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
     - name: Test with dotnet
-      run: dotnet test ./src/MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
+      run: dotnet test ./MMLib.Ocelot.Provider.AppConfiguration.sln --configuration Release
