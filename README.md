@@ -10,7 +10,7 @@
 1. Define routing configuration
 
 ```json
-"ReRoutes": [
+"Routes": [
     {
       "DownstreamPathTemplate": "/api/users",
       "ServiceName": "authorization",
