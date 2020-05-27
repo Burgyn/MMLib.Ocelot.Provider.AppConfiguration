@@ -23,8 +23,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             IServiceDiscoveryProvider provider = factory(
                 services.BuildServiceProvider(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 1),
-                new DownstreamReRouteBuilder().WithServiceName("Users").Build());
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 1),
+                new DownstreamRouteBuilder().WithServiceName("Users").Build());
 
             provider.Should().NotBeNull();
         }
