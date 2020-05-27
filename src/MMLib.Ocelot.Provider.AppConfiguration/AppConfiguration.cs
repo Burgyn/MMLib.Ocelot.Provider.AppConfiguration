@@ -36,7 +36,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
         /// <param name="factory">The factory.</param>
         public AppConfiguration(
             IConfiguration configuration,
-            DownstreamReRoute downstreamReRoute,
+            DownstreamRoute downstreamReRoute,
             ServiceProviderConfiguration providerConfiguration,
             IMemoryCache cache,
             IOcelotLoggerFactory factory)

@@ -28,8 +28,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             var appConfiguration = new AppConfiguration(
                 configuration,
-                new DownstreamReRouteBuilder().WithServiceName(serviceName).Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 1),
+                new DownstreamRouteBuilder().WithServiceName(serviceName).Build(),
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 1),
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
@@ -50,8 +50,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             var appConfiguration = new AppConfiguration(
                 configuration,
-                new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new DownstreamRouteBuilder().WithServiceName("Users").Build(),
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 300000),
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
@@ -68,8 +68,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             var appConfiguration = new AppConfiguration(
                 configuration,
-                new DownstreamReRouteBuilder().WithServiceName("Service1").Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new DownstreamRouteBuilder().WithServiceName("Service1").Build(),
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 300000),
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
@@ -88,8 +88,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             var appConfiguration = new AppConfiguration(
                 configuration,
-                new DownstreamReRouteBuilder().WithServiceName("ToDos").Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new DownstreamRouteBuilder().WithServiceName("ToDos").Build(),
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 300000),
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
@@ -106,8 +106,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
 
             var appConfiguration = new AppConfiguration(
                 configuration,
-                new DownstreamReRouteBuilder().WithServiceName("Users").Build(),
-                new ServiceProviderConfiguration("", "", 1, "", "", 300000),
+                new DownstreamRouteBuilder().WithServiceName("Users").Build(),
+                new ServiceProviderConfiguration("", "", "", 1, "", "", 300000),
                 cache,
                 Substitute.For<IOcelotLoggerFactory>());
 
