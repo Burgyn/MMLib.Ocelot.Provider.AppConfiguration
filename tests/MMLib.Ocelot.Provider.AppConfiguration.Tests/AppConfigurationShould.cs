@@ -33,7 +33,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
-            Service service = (await appConfiguration.Get()).First();
+            Service service = (await appConfiguration.GetAsync()).First();
 
             var uri = new UriBuilder(
                 service.HostAndPort.Scheme,
@@ -55,8 +55,8 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
-            Service service = (await appConfiguration.Get()).First();
-            Service service2 = (await appConfiguration.Get()).First();
+            Service service = (await appConfiguration.GetAsync()).First();
+            Service service2 = (await appConfiguration.GetAsync()).First();
 
             service.Should().Be(service2);
         }
@@ -73,7 +73,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
-            List<Service> services = await appConfiguration.Get();
+            List<Service> services = await appConfiguration.GetAsync();
 
             services.Should().BeEmpty();
         }
@@ -93,7 +93,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 new MemoryCache(new MemoryCacheOptions()),
                 Substitute.For<IOcelotLoggerFactory>());
 
-            Service service = (await appConfiguration.Get()).First();
+            Service service = (await appConfiguration.GetAsync()).First();
 
             service.HostAndPort.DownstreamPort.Should().Be(9004);
         }
@@ -111,9 +111,9 @@ namespace MMLib.Ocelot.Provider.AppConfiguration.Tests
                 cache,
                 Substitute.For<IOcelotLoggerFactory>());
 
-            Service service = (await appConfiguration.Get()).First();
+            Service service = (await appConfiguration.GetAsync()).First();
             cache.Remove("Service_users");
-            Service service2 = (await appConfiguration.Get()).First();
+            Service service2 = (await appConfiguration.GetAsync()).First();
 
             service.Should().NotBe(service2);
         }

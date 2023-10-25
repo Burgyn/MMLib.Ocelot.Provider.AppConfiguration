@@ -51,7 +51,7 @@ namespace MMLib.Ocelot.Provider.AppConfiguration
         /// <summary>
         /// Gets services.
         /// </summary>
-        public Task<List<Service>> Get()
+        public Task<List<Service>> GetAsync()
             => Task.FromResult(GetServices());
 
         private List<Service> GetServices()
