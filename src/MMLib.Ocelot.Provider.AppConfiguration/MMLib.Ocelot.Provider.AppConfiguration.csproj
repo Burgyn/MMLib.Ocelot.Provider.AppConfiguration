@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <Authors>Milan Martiniak</Authors>
     <Company>MMLib</Company>
     <Description>App configuration provider for obtaining services.</Description>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ocelot" Version="20.0.0" />
+    <PackageReference Include="Ocelot" Version="23.4.3" />
   </ItemGroup>
 
 </Project>
